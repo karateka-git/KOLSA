@@ -38,7 +38,6 @@
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:visibility="visible"
-            android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@+id/workout_type_filter_button"
             app:layout_constraintTop_toTopOf="parent"/>
 

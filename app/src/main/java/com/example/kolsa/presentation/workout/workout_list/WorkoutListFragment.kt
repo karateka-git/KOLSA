@@ -63,7 +63,10 @@ class WorkoutListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ViewCompat.setOnApplyWindowInsetsListener(binding.workoutListContainer) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val systemBars = insets.getInsets(
+                WindowInsetsCompat.Type.displayCutout() +
+                        WindowInsetsCompat.Type.systemBars()
+            )
             v.setPadding(
                 systemBars.left,
                 systemBars.top,
