@@ -5,8 +5,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.kolsa.databinding.ActivityMainBinding
+import com.example.kolsa.presentation.util.ext.onDestroyNullable
 
 class MainActivity : AppCompatActivity() {
+
+    private var binding by onDestroyNullable<ActivityMainBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
