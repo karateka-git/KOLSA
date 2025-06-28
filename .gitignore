@@ -1,15 +1,45 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+###########################
+########## MacOs ##########
+###########################
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+###########################
+########## IDEA ###########
+###########################
+.idea
+*.iml
+
+###########################
+###### Android Studio #####
+###########################
+captures
+*.li
+*.hprof
+*.trace
+sh.exe.stackdump
+
+###########################
+########## Java ###########
+###########################
+.classpath
+.project
+
+###########################
+######### Gradle ##########
+###########################
+.gradle
+build
 local.properties
+
+###########################
+######### Fabric ##########
+###########################
+fabric.properties
+*fabric*.txt
+
+###########################
+########## Other ##########
+###########################
+*.sh
+paperwork.json
+/.kotlin/
