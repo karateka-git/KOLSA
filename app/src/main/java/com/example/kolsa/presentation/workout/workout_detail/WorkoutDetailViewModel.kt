@@ -3,7 +3,7 @@ package com.example.kolsa.presentation.workout.workout_detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.kolsa.presentation.workout.models.WorkoutId
+import com.example.kolsa.domain.models.WorkoutId
 
 class WorkoutDetailViewModel(
     args: WorkoutDetailFragmentArgs,

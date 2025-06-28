@@ -1,14 +1,74 @@
 package com.example.kolsa.presentation.workout.workout_list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.kolsa.domain.models.WorkoutList
+import com.example.kolsa.domain.models.WorkoutType
+import com.example.kolsa.domain.repositories.WorkoutRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 
-class WorkoutListViewModel() : ViewModel() {
-    private val _searchQuery: MutableLiveData<String> = MutableLiveData("Workout list init")
-    val searchQuery: LiveData<String> = _searchQuery
+data class WorkoutListState(
+    val isLoading: Boolean = true,
+    val isUpdating: Boolean = false,
+    val error: Throwable? = null,
+    val selectedFilterType: WorkoutType = WorkoutType.Unknown,
+    val workoutList: WorkoutList = WorkoutList(),
+)
 
-    fun onSearchQueryChange(query: String) {
-        _searchQuery.value = query
+class WorkoutListViewModel(
+    private val repository: WorkoutRepository
+) : ViewModel(), KoinComponent {
+    private val _uiState: MutableStateFlow<WorkoutListState> = MutableStateFlow(WorkoutListState())
+    val uiState: StateFlow<WorkoutListState> = _uiState
+
+    init {
+        viewModelScope.launch {
+            val result = repository.getWorkoutList()
+            result.fold(
+                onSuccess = {
+                    _uiState.emit(_uiState.value.copy(
+                        isLoading = false,
+                        workoutList = it,
+                        error = null,
+                    ))
+                },
+                onFailure = {
+                    _uiState.emit(_uiState.value.copy(isLoading = false, error = it))
+                }
+            )
+        }
+    }
+
+    fun onChangeSelectedType(type: WorkoutType) {
+        viewModelScope.launch {
+            _uiState.emit(
+                _uiState.value.copy(
+                    isUpdating = true,
+                )
+            )
+
+            repository.changeSelectedFilter(type).fold(
+                onSuccess = {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            selectedFilterType = type,
+                            workoutList = it,
+                            isUpdating = false,
+                        )
+                    )
+                },
+                onFailure = {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            error = it,
+                            isUpdating = false,
+                        )
+                    )
+                }
+            )
+        }
     }
 }

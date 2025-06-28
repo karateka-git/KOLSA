@@ -22,6 +22,6 @@
         tools:layout="@layout/fragment_workout_detail" >
         <argument
             android:name="workout_id"
-            app:argType="com.example.kolsa.presentation.workout.models.WorkoutId" />
+            app:argType="com.example.kolsa.domain.models.WorkoutId" />
     </fragment>
 </navigation>

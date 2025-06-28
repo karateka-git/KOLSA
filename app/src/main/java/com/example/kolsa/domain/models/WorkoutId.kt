@@ -1,4 +1,4 @@
-package com.example.kolsa.presentation.workout.models
+package com.example.kolsa.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
