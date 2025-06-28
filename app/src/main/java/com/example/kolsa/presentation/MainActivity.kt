@@ -1,4 +1,4 @@
-package com.example.kolsa
+package com.example.kolsa.presentation
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

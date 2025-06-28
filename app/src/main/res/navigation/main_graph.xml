@@ -20,5 +20,8 @@
         android:name="com.example.kolsa.presentation.workout.workout_detail.WorkoutDetailFragment"
         android:label="fragment_workout_detail"
         tools:layout="@layout/fragment_workout_detail" >
+        <argument
+            android:name="workout_id"
+            app:argType="com.example.kolsa.presentation.workout.models.WorkoutId" />
     </fragment>
 </navigation>

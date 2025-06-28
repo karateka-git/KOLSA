@@ -11,6 +11,7 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 
 androidNavigationVersion = "2.9.0"
+koinBomVersion = "4.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,7 +27,13 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 android-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidNavigationVersion" }
 android-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidNavigationVersion" }
 
+#Koin
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBomVersion" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidNavigationVersion"}
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlin"  }
