@@ -15,6 +15,7 @@ data class WorkoutListState(
     val isUpdating: Boolean = false,
     val error: Throwable? = null,
     val selectedFilterType: WorkoutType = WorkoutType.Unknown,
+    val searchQuery: String = "",
     val workoutList: WorkoutList = WorkoutList(),
 )
 
@@ -50,7 +51,10 @@ class WorkoutListViewModel(
                 )
             )
 
-            repository.changeSelectedFilter(type).fold(
+            repository.getWorkoutList(
+                searchQuery = _uiState.value.searchQuery,
+                selectedFilterType = type,
+            ).fold(
                 onSuccess = {
                     _uiState.emit(
                         _uiState.value.copy(
@@ -65,6 +69,36 @@ class WorkoutListViewModel(
                         _uiState.value.copy(
                             error = it,
                             isUpdating = false,
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    fun onSearchQueryChanged(searchText: String) {
+        viewModelScope.launch {
+            _uiState.emit(
+                _uiState.value.copy(
+                    searchQuery = searchText,
+                )
+            )
+
+            repository.getWorkoutList(
+                searchQuery = searchText,
+                selectedFilterType = _uiState.value.selectedFilterType,
+            ).fold(
+                onSuccess = {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            workoutList = it,
+                        )
+                    )
+                },
+                onFailure = {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            error = it,
                         )
                     )
                 }

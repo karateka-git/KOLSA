@@ -7,8 +7,10 @@ import com.example.kolsa.domain.models.WorkoutType
 import com.example.kolsa.domain.models.WorkoutVideo
 
 interface WorkoutRepository {
-    suspend fun getWorkoutList(): Result<WorkoutList>
-    suspend fun changeSelectedFilter(selectedFilterType: WorkoutType): Result<WorkoutList>
+    suspend fun getWorkoutList(
+        searchQuery: String = "",
+        selectedFilterType: WorkoutType = WorkoutType.Unknown,
+    ): Result<WorkoutList>
     suspend fun getWorkout(id: WorkoutId): Result<WorkoutItem>
     suspend fun getWorkoutVideo(id: WorkoutId): Result<WorkoutVideo>
 }

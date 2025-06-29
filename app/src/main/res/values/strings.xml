@@ -4,7 +4,9 @@
     <string name="workout_type_training">Тренировка</string>
     <string name="workout_type_broadcast">Эфир</string>
     <string name="workout_type_complex">Комплекс</string>
+    <string name="workout_empty">Тренировок не найдено</string>
     <string name="select_type_unknown">Все</string>
+    <string name="search_channel_hint">Введите название тренировки</string>
 
     <string name="load_error">При загрузке данных,\nчто-то пошло не так</string>
 </resources>

@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -18,6 +20,7 @@ import com.example.kolsa.databinding.FragmentWorkoutListBinding
 import com.example.kolsa.domain.models.WorkoutItem
 import com.example.kolsa.domain.models.WorkoutType
 import com.example.kolsa.presentation.util.ext.getStringRes
+import com.example.kolsa.presentation.util.ext.hideKeyboard
 import com.example.kolsa.presentation.util.ext.onDestroyNullable
 import com.example.kolsa.presentation.workout.workout_list.adapters.WorkoutAdapter
 import com.example.kolsa.presentation.workout.workout_list.adapters.WorkoutItemViewHolder
@@ -62,7 +65,7 @@ class WorkoutListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.workoutListContainer) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.workoutDataContainer) { v, insets ->
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.displayCutout() +
                         WindowInsetsCompat.Type.systemBars()
@@ -82,8 +85,20 @@ class WorkoutListFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.workoutTypeFilterButton.setOnClickListener {
-            workoutFilterTypePopupMenu.show()
+        binding.apply {
+            workoutTypeFilterButton.setOnClickListener {
+                workoutFilterTypePopupMenu.show()
+            }
+            searchEditText.apply {
+                setOnEditorActionListener { editText, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        editText.hideKeyboard()
+                        clearFocus()
+                    }
+                    false
+                }
+                doAfterTextChanged { viewModel.onSearchQueryChanged(it.toString()) }
+            }
         }
     }
 
@@ -101,13 +116,13 @@ class WorkoutListFragment : Fragment() {
                         when {
                             uiState.error != null -> {
                                 loadingProgressBar.isVisible = false
-                                workoutListContainer.isVisible = false
+                                workoutDataContainer.isVisible = false
                                 errorTextView.isVisible = true
                                 updatingProgressBar.isVisible = false
                             }
                             uiState.isLoading -> {
                                 loadingProgressBar.isVisible = true
-                                workoutListContainer.isVisible = false
+                                workoutDataContainer.isVisible = false
                                 errorTextView.isVisible = false
                                 updatingProgressBar.isVisible = false
                             }
@@ -116,11 +131,21 @@ class WorkoutListFragment : Fragment() {
                             }
                             else -> {
                                 loadingProgressBar.isVisible = false
-                                workoutListContainer.isVisible = true
+                                workoutDataContainer.isVisible = true
                                 errorTextView.isVisible = false
                                 updatingProgressBar.isVisible = false
                                 workoutTypeFilterButton.text = requireContext().getText(uiState.selectedFilterType.getStringRes())
-                                workoutListAdapter.swapItems(uiState.workoutList.items)
+                                when {
+                                    uiState.workoutList.items.isEmpty() -> {
+                                        workoutEmptyTextView.isVisible = true
+                                        workoutListRecycler.isVisible = false
+                                    }
+                                    else -> {
+                                        workoutEmptyTextView.isVisible = false
+                                        workoutListRecycler.isVisible = true
+                                        workoutListAdapter.swapItems(uiState.workoutList.items)
+                                    }
+                                }
                             }
                         }
                     }
