@@ -1,5 +1,6 @@
 package com.example.kolsa.di
 
+import com.example.kolsa.BuildConfig
 import com.example.kolsa.data.repositories.WorkoutRepositoryImpl
 import com.example.kolsa.data.services.WorkoutApi
 import com.example.kolsa.domain.repositories.WorkoutRepository
@@ -25,7 +26,7 @@ private val apiModules = module {
     }
     single {
         Retrofit.Builder()
-            .baseUrl("https://ref.test.kolsa.ru/")
+            .baseUrl(BuildConfig.BASE_DOMAIN)
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -1,11 +1,13 @@
 package com.example.kolsa.data.repositories
 
 import com.example.kolsa.data.models.response.toWorkoutItem
+import com.example.kolsa.data.models.response.toWorkoutVideo
 import com.example.kolsa.data.services.WorkoutApi
 import com.example.kolsa.domain.models.WorkoutId
 import com.example.kolsa.domain.models.WorkoutItem
 import com.example.kolsa.domain.models.WorkoutList
 import com.example.kolsa.domain.models.WorkoutType
+import com.example.kolsa.domain.models.WorkoutVideo
 import com.example.kolsa.domain.repositories.WorkoutRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -41,5 +43,11 @@ class WorkoutRepositoryImpl(
 
     override suspend fun getWorkout(id: WorkoutId): Result<WorkoutItem> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getWorkoutVideo(id: WorkoutId): Result<WorkoutVideo> = withContext(Dispatchers.IO) {
+        runCatching {
+            service.getWorkoutVideo(id).toWorkoutVideo()
+        }
     }
 }

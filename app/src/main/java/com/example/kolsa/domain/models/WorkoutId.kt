@@ -5,4 +5,4 @@ import kotlinx.parcelize.Parcelize
 
 @JvmInline
 @Parcelize
-value class WorkoutId(val id: Int): Parcelable
+value class WorkoutId(val id: Int = -1): Parcelable
