@@ -41,8 +41,10 @@ class WorkoutRepositoryImpl(
         }
     }
 
-    override suspend fun getWorkout(id: WorkoutId): Result<WorkoutItem> {
-        TODO("Not yet implemented")
+    override suspend fun getWorkout(id: WorkoutId): Result<WorkoutItem> = withContext(Dispatchers.IO) {
+        runCatching {
+            cashedWorkoutList.items.first { it.id == id }
+        }
     }
 
     override suspend fun getWorkoutVideo(id: WorkoutId): Result<WorkoutVideo> = withContext(Dispatchers.IO) {

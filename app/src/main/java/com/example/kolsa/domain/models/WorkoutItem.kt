@@ -2,11 +2,11 @@ package com.example.kolsa.domain.models
 
 
 data class WorkoutItem(
-    val id: WorkoutId,
-    val title: String,
+    val id: WorkoutId = WorkoutId(),
+    val title: String = "",
     val description: String? = null,
-    val type: WorkoutType,
-    val duration: String,
+    val type: WorkoutType = WorkoutType.Unknown,
+    val duration: String = "",
 )
 
 enum class WorkoutType {

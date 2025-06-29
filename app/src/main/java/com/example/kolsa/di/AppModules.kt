@@ -3,11 +3,13 @@ package com.example.kolsa.di
 import com.example.kolsa.BuildConfig
 import com.example.kolsa.data.repositories.WorkoutRepositoryImpl
 import com.example.kolsa.data.services.WorkoutApi
+import com.example.kolsa.domain.interactors.LoadDetailWorkoutUseCase
 import com.example.kolsa.domain.repositories.WorkoutRepository
 import com.example.kolsa.presentation.workout.workout_detail.WorkoutDetailViewModel
 import com.example.kolsa.presentation.workout.workout_list.WorkoutListViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -43,6 +45,11 @@ private val dataModules = listOf(
     repositoryModules,
 )
 
+private val domainModules = module {
+    singleOf(::LoadDetailWorkoutUseCase)
+}
+
 val koinAppModules =
+    domainModules +
     dataModules +
     presentationModules

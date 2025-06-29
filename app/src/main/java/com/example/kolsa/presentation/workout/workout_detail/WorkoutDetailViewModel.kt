@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C.TRACK_TYPE_VIDEO
 import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
+import com.example.kolsa.domain.interactors.LoadDetailWorkoutUseCase
 import com.example.kolsa.domain.models.Quality
 import com.example.kolsa.domain.models.WorkoutDetailInfo
-import com.example.kolsa.domain.repositories.WorkoutRepository
 import com.google.common.collect.ImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ data class WorkoutDetailState(
 
 class WorkoutDetailViewModel(
     args: WorkoutDetailFragmentArgs,
-    private val repository: WorkoutRepository
+    private val loadDetailWorkoutUseCase: LoadDetailWorkoutUseCase
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<WorkoutDetailState> = MutableStateFlow(WorkoutDetailState())
     val uiState: StateFlow<WorkoutDetailState> = _uiState
@@ -45,12 +45,12 @@ class WorkoutDetailViewModel(
 
     init {
         viewModelScope.launch {
-            val result = repository.getWorkoutVideo(args.workoutId)
+            val result = loadDetailWorkoutUseCase.invoke(args.workoutId)
             result.fold(
                 onSuccess = {
                     _uiState.emit(_uiState.value.copy(
                         isLoading = false,
-                        workoutDetailInfo = WorkoutDetailInfo(id = args.workoutId, video = it),
+                        workoutDetailInfo = it,
                         error = null,
                     ))
                 },

@@ -9,6 +9,7 @@ import androidx.annotation.OptIn
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -23,6 +24,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.navigation.fragment.navArgs
 import com.example.kolsa.databinding.FragmentWorkoutDetailBinding
 import com.example.kolsa.domain.models.Quality
+import com.example.kolsa.presentation.util.ext.getStringRes
 import com.example.kolsa.presentation.util.ext.onDestroyNullable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -74,9 +76,18 @@ class WorkoutDetailFragment : Fragment() {
             insets
         }
         // TODO можно вынести в базовый фрагмент
-        initPlayer()
         initObservers()
         initListeners()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initPlayer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        releasePlayer()
     }
 
     private fun initPlayer() {
@@ -93,15 +104,17 @@ class WorkoutDetailFragment : Fragment() {
             }
     }
 
+    private fun releasePlayer() {
+        player?.let {
+            it.release()
+            player = null
+        }
+    }
+
     private fun initListeners() {
         binding.exoQuality.setOnClickListener {
             qualityPopupMenu.show()
         }
-//        binding.root.apply {
-//            setOnClickListener {
-//                findNavController().popBackStack()
-//            }
-//        }
     }
 
     @OptIn(UnstableApi::class)
@@ -115,7 +128,27 @@ class WorkoutDetailFragment : Fragment() {
                 Lifecycle.State.STARTED,
             ).collectLatest { uiState ->
                 with(binding) {
-                    textview.text = uiState.workoutDetailInfo.id.toString()
+                    when {
+                        uiState.error != null -> {
+                            loadingProgressBar.isVisible = false
+                            dataContainer.isVisible = false
+                            errorTextView.isVisible = true
+                        }
+                        uiState.isLoading -> {
+                            loadingProgressBar.isVisible = true
+                            dataContainer.isVisible = false
+                            errorTextView.isVisible = false
+                        }
+                        else -> {
+                            loadingProgressBar.isVisible = false
+                            dataContainer.isVisible = true
+                            errorTextView.isVisible = false
+
+                            titleTextView.text = uiState.workoutDetailInfo.info.title
+                            descriptionTextView.text = uiState.workoutDetailInfo.info.description
+                            typeTextView.text = requireContext().getText(uiState.workoutDetailInfo.info.type.getStringRes())
+                        }
+                    }
                 }
             }
         }
