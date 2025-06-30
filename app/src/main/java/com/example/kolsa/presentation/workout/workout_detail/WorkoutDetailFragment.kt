@@ -145,7 +145,10 @@ class WorkoutDetailFragment : Fragment() {
                             errorTextView.isVisible = false
 
                             titleTextView.text = uiState.workoutDetailInfo.info.title
-                            descriptionTextView.text = uiState.workoutDetailInfo.info.description
+                            descriptionTextView.apply {
+                                text = uiState.workoutDetailInfo.info.description
+                                isVisible = uiState.workoutDetailInfo.info.description != null
+                            }
                             typeTextView.text = requireContext().getText(uiState.workoutDetailInfo.info.type.getStringRes())
                         }
                     }
